@@ -24,7 +24,6 @@ function progressBar(ctx, x, y, width, radius, progress) {
     ctx.closePath();
     ctx.fill();
 
-    // draw the progress
     if (progress === 0) return;
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
@@ -44,7 +43,7 @@ function progressBar(ctx, x, y, width, radius, progress) {
 async function makeCard(data) {
     const { savePath, avatarPath, name, rank, exp, level, expToNextLevel } = data;
     try {
-        const template = await Canvas.loadImage(join(global.assetsPath, 'rank_card.png'));
+        const template = await Canvas.loadImage(join(global.assetsPath, 'IMG_20250928_094210_388.jpg'));
         const avatar = await Canvas.loadImage(avatarPath);
         const circledAvatar = global.circle(avatar, avatar.width / 2, avatar.height / 2, avatar.width / 2);
 
@@ -52,6 +51,15 @@ async function makeCard(data) {
         const ctx = canvas.getContext('2d');
 
         ctx.drawImage(template, 0, 0);
+
+        // Add "Yogi Bot" text
+        ctx.font = 'bold 28px sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0,0,0,0.4)';
+        ctx.shadowBlur = 4;
+        ctx.fillText('Yogi Bot', canvas.width / 2, 35);
+
         ctx.drawImage(circledAvatar, 15, 21, 101, 101);
 
         ctx.font = 'bold 20px sans-serif';
@@ -59,15 +67,12 @@ async function makeCard(data) {
         ctx.fillText(name, 136, 43);
 
         ctx.font = 'bold 15px sans-serif';
-        ctx.fillStyle = '#ffffff';
         ctx.fillText(`Rank ${rank}`, 136, 66);
 
         ctx.font = 'bold 13px sans-serif';
-        ctx.fillStyle = '#ffffff';
         ctx.fillText(`Lv.${level}`, 136, 87);
 
         ctx.font = 'bold 12px sans-serif';
-        ctx.fillStyle = '#ffffff';
         ctx.fillText(`${exp}/${expToNextLevel}`, 270, 87);
 
         let percent = (exp / expToNextLevel) * 100;
@@ -106,9 +111,7 @@ async function onCall({ message, args, getLang }) {
         if (args.some(e => e.toLowerCase() == '-a' || e.toLowerCase() == 'all')) {
             let _listOf = args.some(e => e.toLowerCase() == '-g' || e.toLowerCase() == 'global') ? 'global' : 'local';
             const allData = _listOf == 'global' ?
-                Array
-                    .from(global.data.users.values())
-                    .map(e => ({ userID: e.userID, exp: e.data?.exp || 1 })) :
+                Array.from(global.data.users.values()).map(e => ({ userID: e.userID, exp: e.data?.exp || 1 })) :
                 (global.data.threads.get(String(threadID))?.info?.members) || [];
 
             if (allData.length == 0) return;
@@ -133,14 +136,11 @@ async function onCall({ message, args, getLang }) {
             }))
         }
 
-
         let targetID = type == 'message_reply' ? messageReply.senderID : Object.keys(mentions).length > 0 ? Object.keys(mentions)[0] : senderID;
         let _listOf = args[0]?.toLowerCase();
         _listOf = (_listOf == '-g' || _listOf == 'global') ? 'global' : (_listOf == '-l' || _listOf == 'local') ? 'local' : 'local';
         const allData = _listOf == 'global' ?
-            Array
-                .from(global.data.users.values())
-                .map(e => ({ userID: e.userID, exp: e.data?.exp || 1 })) :
+            Array.from(global.data.users.values()).map(e => ({ userID: e.userID, exp: e.data?.exp || 1 })) :
             (global.data.threads.get(String(threadID))?.info?.members) || [];
 
         if (allData.length == 0 || !allData.some(e => e.userID == targetID)) return;
@@ -152,40 +152,4 @@ async function onCall({ message, args, getLang }) {
             .map(e => ({ userID: e.userID, exp: e.exp || (_listOf == 'global' ? 1 : 0) }))
             .sort((a, b) => a.exp == b.exp ? a.userID.localeCompare(b.userID) : b.exp - a.exp);
 
-        const rank = sortedData.findIndex(e => e.userID == targetID) + 1;
-        const exp = sortedData[rank - 1].exp || 1;
-        const level = global.expToLevel(exp);
-
-        const currentExp = exp - global.levelToExp(level);
-        const expToNextLevel = global.levelToExp(level + 1) - global.levelToExp(level);
-
-        savePath = join(global.cachePath, `rank_${targetID}_${Date.now()}.png`);
-        avatarPath = join(global.cachePath, `rank_avatar_${targetID}_${Date.now()}.jpg`);
-
-        await global.downloadFile(avatarPath, targetData.info.thumbSrc);
-        let result = await makeCard({ savePath, avatarPath, name: targetData.info.name, rank, exp: currentExp, level, expToNextLevel });
-
-        if (!result) message.reply("Error");
-        else await message.reply({ attachment: global.reader(savePath) });
-    } catch (e) {
-        console.error(e);
-        message.reply("Error");
-    }
-
-    cleanup(savePath, avatarPath);
-}
-
-function cleanup(savePath, avatarPath) {
-    try {
-        if (global.isExists(savePath)) global.deleteFile(savePath);
-        if (global.isExists(avatarPath)) global.deleteFile(avatarPath);
-    } catch (e) {
-        console.error(e);
-    }
-}
-
-export default {
-    config,
-    langData,
-    onCall
-}
+        const rank = sortedData.findIndex(e => e.userID == targetID) + 1[43dcd9a7-70db-4a1f-b0ae-981daa162054](https://github.com/retinasiri/GerritCrawler/tree/a9f4a899fb1dd4bd0f7d02f5791d65eeaba290c9/DownloadModule%2Fnode_modules%2Fcytoscape%2Fdist%2Fcytoscape.umd.js?citationMarker=43dcd9a7-70db-4a1f-b0ae-981daa162054 "1")
